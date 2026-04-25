@@ -100,20 +100,20 @@ create policy "public read rag docs" on public.rag_documents for select using (t
 create policy "public read rag chunks" on public.rag_chunks for select using (true);
 
 insert into public.universities (university_id, university_name, is_state_level) values
-  (1, 'Dr. Babasaheb Ambedkar Marathwada University', false),
-  (2, 'Swami Ramanand Teerth Marathwada University, Nanded', false),
-  (3, 'Mumbai University', false),
-  (4, 'Kavayitri Bahinabai Chaudhari North Maharashtra University, Jalgaon', false),
-  (5, 'Savitribai Phule Pune University', false),
-  (6, 'Shivaji University', false),
-  (7, 'Punyashlok Ahilyadevi Holkar Solapur University', false),
-  (8, 'Sant Gadge Baba Amravati University', false),
-  (9, 'Rashtrasant Tukadoji Maharaj Nagpur University', false),
-  (10, 'Gondwana University', false),
-  (11, 'Autonomous Institute', true),
-  (12, 'SNDT Women''s University', true),
-  (13, 'Dr. Babasaheb Ambedkar Technological University,Lonere', true),
-  (14, 'Deemed to be University', true)
+  (1, 'Autonomous Institute', true),
+  (2, 'Sant Gadge Baba Amravati University', false),
+  (3, 'Dr. Babasaheb Ambedkar Marathwada University', false),
+  (4, 'Deemed to be University', true),
+  (5, 'Swami Ramanand Teerth Marathwada University, Nanded', false),
+  (6, 'Mumbai University', false),
+  (7, 'Dr. Babasaheb Ambedkar Technological University,Lonere', true),
+  (8, 'SNDT Women''s University', true),
+  (9, 'Gondwana University', false),
+  (10, 'Rashtrasant Tukadoji Maharaj Nagpur University', false),
+  (11, 'Kavayitri Bahinabai Chaudhari North Maharashtra University, Jalgaon', false),
+  (12, 'Savitribai Phule Pune University', false),
+  (13, 'Shivaji University', false),
+  (14, 'Punyashlok Ahilyadevi Holkar Solapur University', false)
 on conflict (university_id) do nothing;
 
 insert into public.home_university_maps (district_group, university_name) values
