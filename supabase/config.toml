@@ -19,3 +19,24 @@ port = 54323
 [auth]
 enabled = true
 site_url = "http://localhost:5173"
+
+[functions.recommend-colleges]
+verify_jwt = false
+
+[functions.college-data]
+verify_jwt = false
+
+[functions.college-list]
+verify_jwt = false
+
+[functions.check-cutoff]
+verify_jwt = false
+
+[functions.export-excel]
+verify_jwt = false
+
+[functions.export-pdf]
+verify_jwt = false
+
+[functions.admin-studentform-export]
+verify_jwt = false
