@@ -37,18 +37,19 @@ npm run supabase -- link --project-ref your-project-ref
 npm run supabase -- db push
 ```
 
-Set Edge Function secrets:
+Set the custom Edge Function secret:
 
 ```powershell
-npm run supabase -- secrets set SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-npm run supabase -- secrets set OPENROUTER_API_KEY=your-openrouter-key
 npm run supabase -- secrets set ADMIN_EXPORT_SECRET=your-admin-export-secret
-npm run supabase -- secrets set EMBEDDING_API_URL=https://your-embedding-endpoint
 ```
 
-Optional chatbot secrets:
+Do not set `SUPABASE_SERVICE_ROLE_KEY` manually. Supabase provides `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` to Edge Functions by default.
+
+Optional chatbot secrets, only if AI is enabled later:
 
 ```powershell
+npm run supabase -- secrets set OPENROUTER_API_KEY=your-openrouter-key
+npm run supabase -- secrets set EMBEDDING_API_URL=https://your-embedding-endpoint
 npm run supabase -- secrets set CHAT_MODEL=mistralai/mistral-7b-instruct
 npm run supabase -- secrets set EMBEDDING_MODEL=nomic-embed-text
 ```
