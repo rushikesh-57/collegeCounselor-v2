@@ -118,28 +118,3 @@ begin
   order by cap_round_1 asc;
 end;
 $$;
-
-create or replace function public.match_rag_chunks(
-  query_embedding extensions.vector(768),
-  match_count integer default 3
-)
-returns table (
-  id bigint,
-  content text,
-  title text,
-  similarity double precision
-)
-language sql
-stable
-as $$
-  select
-    rc.id,
-    rc.content,
-    rd.title,
-    1 - (rc.embedding <=> query_embedding) as similarity
-  from public.rag_chunks rc
-  left join public.rag_documents rd on rd.id = rc.document_id
-  where rc.embedding is not null
-  order by rc.embedding <=> query_embedding
-  limit match_count;
-$$;
