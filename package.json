@@ -4,29 +4,26 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "preview": "next start",
+    "dev:vite": "vite",
+    "build:vite": "vite build",
     "supabase": "supabase"
   },
   "devDependencies": {
+    "@types/node": "^22.15.13",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "supabase": "^2.95.3",
     "typescript": "~6.0.2",
     "vite": "^8.0.10"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^9.0.0",
-    "@mui/material": "^9.0.0",
-    "@supabase/supabase-js": "^2.104.1",
-    "@vitejs/plugin-react": "^6.0.1",
-    "ag-grid-community": "^35.2.1",
-    "ag-grid-react": "^35.2.1",
-    "jspdf": "^4.2.1",
-    "jspdf-autotable": "^5.0.7",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.2"
+    "next": "^15.3.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@supabase/supabase-js": "^2.104.1"
   }
 }

@@ -1,0 +1,77 @@
+# Architecture Blueprint (Startup-Ready)
+
+## Proposed Folder Structure
+
+```text
+src/
+  app/                # App composition (providers, router, bootstrapping)
+  api/                # API gateway layer (Supabase function wrappers)
+  components/         # Reusable UI components used by multiple features
+  data/               # Static option lists and guides
+  pages/              # Route-level screens
+  shared/
+    config/           # Environment and runtime configuration
+    hooks/            # Reusable async/data hooks
+    lib/              # Validators, logger, monitoring helpers
+    ui/               # Cross-cutting UI (SEO, error boundaries, skeletons)
+```
+
+## Design System
+
+1. Typography: `Manrope` primary + `Inter` fallback.
+2. Color tokens:
+- Primary: `#1141c1`
+- Secondary: `#0d8f6f`
+- Background: `#f4f7fb`
+- Text primary: `#101828`
+- Divider: `#d0dbe9`
+3. Spacing scale: 8px baseline through MUI `spacing`.
+4. Radius: 10-12px on controls and cards.
+5. Accessibility: visible focus ring and improved contrast.
+
+## Production Features Added
+
+1. Error boundary at app shell level.
+2. API monitoring hooks (latency + success/failure).
+3. Reusable async states for loading/error/empty handling.
+4. Form validation extraction for consistent behavior.
+5. Route-based lazy loading for smaller initial bundle.
+6. Basic SEO metadata + `robots.txt` + `sitemap.xml`.
+
+## Backend Recommendation (Opinionated)
+
+1. Keep Supabase Postgres as primary database (best fit with existing infra).
+2. Use Supabase Auth JWT for user sessions if app stays inside Supabase ecosystem.
+3. Add FastAPI service only for heavier business workflows (batch analytics, recommendation experiments, long-running jobs).
+4. For secure APIs:
+- Validate payloads at edge function boundaries.
+- Rate-limit public endpoints (Cloudflare Turnstile or edge middleware).
+- Separate anonymous/public role and privileged service role paths.
+
+## Caching Strategy
+
+1. Browser cache: static assets via Vite hashed chunks.
+2. API caching: add edge caching for read-only endpoints (`college-data`, `college-list`).
+3. Client memoization: keep derived lists in `useMemo`.
+
+## Analytics + Monitoring
+
+1. Product analytics: GA4 or PostHog (`VITE_GA_MEASUREMENT_ID`).
+2. Error monitoring: Sentry (frontend + edge functions).
+3. Uptime and synthetic checks: Better Stack/UptimeRobot.
+
+## Deployment Strategy
+
+1. Frontend: Vercel (global CDN + preview deployments).
+2. Backend/API: Supabase Edge Functions (current) + optional Render/Fly.io for FastAPI.
+3. CI/CD:
+- GitHub Actions for lint/test/build.
+- Deploy previews per PR.
+- Production deploy only from protected `main`.
+
+## Monetization Ideas
+
+1. Freemium: free college predictor, paid advanced filter packs and counselor notes.
+2. Subscription for parents/students: alerts when cutoff datasets update.
+3. B2B offering for coaching institutes with white-label dashboards.
+4. Sponsored placements with clear “Sponsored” label for compliance.

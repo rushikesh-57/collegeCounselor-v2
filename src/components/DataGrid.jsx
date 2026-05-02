@@ -1,33 +1,65 @@
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { useMemo } from 'react';
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 
 export default function DataGrid({ rows, height = '62vh', getRowStyle }) {
-  const columnDefs = useMemo(() => {
+  const headers = useMemo(() => {
     if (!rows?.length) return [];
     const seen = new Set();
     return Object.keys(rows[0])
       .filter((key) => !seen.has(key.toLowerCase()) && seen.add(key.toLowerCase()))
       .map((key) => ({
-        field: key,
-        headerName: key.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()),
-        filter: true,
-        floatingFilter: true,
-        resizable: true,
-        minWidth: key.includes('college') ? 260 : key.includes('branch') ? 220 : 145,
+        key,
+        label: key.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()),
       }));
   }, [rows]);
 
+  if (!rows?.length) {
+    return (
+      <Box sx={{ py: 5, textAlign: 'center', color: 'text.secondary' }}>
+        <Typography>No data to display.</Typography>
+      </Box>
+    );
+  }
+
   return (
-    <div className="ag-theme-quartz" style={{ width: '100%', height, minHeight: 360 }}>
-      <AgGridReact
-        rowData={rows}
-        columnDefs={columnDefs}
-        getRowStyle={getRowStyle}
-        defaultColDef={{ suppressMovable: true, filter: true, floatingFilter: true }}
-        alwaysShowHorizontalScroll
-      />
-    </div>
+    <Paper variant="outlined" sx={{ borderColor: 'divider' }}>
+      <TableContainer sx={{ maxHeight: height, overflowX: 'auto' }}>
+        <Table size="small" stickyHeader sx={{ minWidth: 880 }} aria-label="Results table">
+          <TableHead>
+            <TableRow>
+              {headers.map((header) => (
+                <TableCell key={header.key} sx={{ fontWeight: 800, whiteSpace: 'nowrap' }}>
+                  {header.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, rowIndex) => {
+              const style = getRowStyle ? getRowStyle({ data: row, rowIndex }) : undefined;
+              return (
+                <TableRow key={`row-${rowIndex}`} sx={{ backgroundColor: style?.backgroundColor }}>
+                  {headers.map((header) => (
+                    <TableCell key={`${rowIndex}-${header.key}`} sx={{ whiteSpace: 'nowrap', py: 1.2 }}>
+                      {String(row[header.key] ?? '-')}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }

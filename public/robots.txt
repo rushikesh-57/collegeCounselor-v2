@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://college-counselor.example.com/sitemap.xml

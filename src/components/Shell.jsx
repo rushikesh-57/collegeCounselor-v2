@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -34,16 +35,17 @@ const navItems = [
 
 export default function Shell() {
   const [anchor, setAnchor] = useState(null);
-  const isMobile = useMediaQuery('(max-width:760px)');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <AppBar position="sticky" color="inherit" elevation={0} sx={{ borderBottom: '1px solid #dbe3f0' }}>
+      <AppBar position="sticky" color="inherit" elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider', backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255,255,255,0.86)' }}>
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ gap: 2 }}>
+          <Toolbar disableGutters sx={{ gap: 1.25, minHeight: { xs: 64, md: 72 } }}>
             {isMobile && (
-              <IconButton onClick={(event) => setAnchor(event.currentTarget)} aria-label="Open navigation">
+              <IconButton onClick={(event) => setAnchor(event.currentTarget)} aria-label="Open navigation" size="large">
                 <MenuIcon />
               </IconButton>
             )}
@@ -51,24 +53,35 @@ export default function Shell() {
               variant="h6"
               component={NavLink}
               to="/"
-              sx={{ color: 'primary.main', fontWeight: 850, flexShrink: 0 }}
+              sx={{
+                color: 'primary.main',
+                fontWeight: 850,
+                flexShrink: 0,
+                textDecoration: 'none',
+                fontSize: { xs: '1rem', md: '1.2rem' },
+                letterSpacing: '-0.01em',
+              }}
             >
               College Counselor
             </Typography>
             {!isMobile && (
-              <Stack direction="row" spacing={0.5} sx={{ ml: 'auto' }}>
-                {navItems.map((item) => (
-                  <Button
-                    key={item.to}
-                    component={NavLink}
-                    to={item.to}
-                    color={location.pathname === item.to ? 'primary' : 'inherit'}
-                    startIcon={<item.icon />}
-                    sx={{ px: 1.5 }}
-                  >
-                    {item.label}
-                  </Button>
-                ))}
+              <Stack direction="row" spacing={0.75} sx={{ ml: 'auto' }}>
+                {navItems.map((item) => {
+                  const active = location.pathname === item.to;
+                  return (
+                    <Button
+                      key={item.to}
+                      component={NavLink}
+                      to={item.to}
+                      color={active ? 'primary' : 'inherit'}
+                      variant={active ? 'contained' : 'text'}
+                      startIcon={<item.icon />}
+                      sx={{ px: 1.35 }}
+                    >
+                      {item.label}
+                    </Button>
+                  );
+                })}
               </Stack>
             )}
           </Toolbar>
@@ -82,6 +95,7 @@ export default function Shell() {
             component={NavLink}
             to={item.to}
             onClick={() => setAnchor(null)}
+            sx={{ minHeight: 44 }}
           >
             <item.icon style={{ marginRight: 10 }} fontSize="small" />
             {item.label}

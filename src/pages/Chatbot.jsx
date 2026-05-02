@@ -38,14 +38,14 @@ export default function Chatbot() {
         </Box>
       </Stack>
 
-      <Stack spacing={1.5} sx={{ p: 2, height: '62vh', overflowY: 'auto', bgcolor: '#f8fafc' }}>
+      <Stack spacing={1.5} sx={{ p: { xs: 1.5, md: 2 }, height: { xs: '58vh', md: '62vh' }, overflowY: 'auto', bgcolor: '#f8fafc' }}>
         {messages.length === 0 && <Typography color="text.secondary" textAlign="center" sx={{ mt: 8 }}>Ask about CAP rounds, cutoffs, documents, or branch selection.</Typography>}
         {messages.map((message, index) => (
           <Stack key={`${message.from}-${index}`} direction={message.from === 'user' ? 'row-reverse' : 'row'} spacing={1} alignItems="flex-start">
             <Avatar sx={{ bgcolor: message.from === 'user' ? 'secondary.main' : 'primary.main' }}>
               {message.from === 'user' ? <PersonIcon /> : <SmartToyIcon />}
             </Avatar>
-            <Paper elevation={0} sx={{ p: 1.5, maxWidth: '75%', whiteSpace: 'pre-wrap', border: '1px solid #dbe3f0' }}>
+            <Paper elevation={0} sx={{ p: 1.5, maxWidth: { xs: '84%', md: '75%' }, whiteSpace: 'pre-wrap', border: '1px solid #dbe3f0' }}>
               {message.text}
             </Paper>
           </Stack>
@@ -54,7 +54,7 @@ export default function Chatbot() {
         {error && <Alert severity="error">{error}</Alert>}
       </Stack>
 
-      <Stack direction="row" spacing={1} sx={{ p: 2, borderTop: '1px solid #dbe3f0' }}>
+      <Stack direction="row" spacing={1} sx={{ p: { xs: 1.5, md: 2 }, borderTop: '1px solid #dbe3f0' }}>
         <TextField fullWidth size="small" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') send(); }} placeholder="Ask a college counselling question" />
         <IconButton color="primary" onClick={send} disabled={loading} aria-label="Send message"><SendIcon /></IconButton>
       </Stack>

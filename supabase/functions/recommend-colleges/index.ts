@@ -8,6 +8,8 @@ Deno.serve(async (request) => {
 
   try {
     const body = requireJsonObject(await request.json());
+    const authHeader = request.headers.get('Authorization') ?? '';
+    const token = authHeader.replace('Bearer ', '').trim();
     const mobileNumber = String(body.mobileNumber ?? '');
     const rank = Number(body.rank);
     if (!/^[0-9]{10}$/.test(mobileNumber)) return jsonResponse({ error: 'Valid mobile number is required' }, 400);
@@ -30,7 +32,16 @@ Deno.serve(async (request) => {
     };
 
     const supabase = serviceClient();
-    const { error: upsertError } = await supabase.from('student_forms').upsert(payload);
+    const { data: userResult } = token
+      ? await supabase.auth.getUser(token)
+      : { data: { user: null } };
+    const userId = userResult.user?.id ?? null;
+
+    const { data: formRow, error: upsertError } = await supabase
+      .from('student_forms')
+      .upsert({ ...payload, user_id: userId }, { onConflict: 'mobile_number' })
+      .select('id')
+      .single();
     if (upsertError) throw upsertError;
 
     const { data, error } = await supabase.rpc('get_college_recommendations', {
@@ -49,6 +60,29 @@ Deno.serve(async (request) => {
       p_year: 2025,
     });
     if (error) throw error;
+
+    if (userId) {
+      await supabase.from('recommendation_runs').insert({
+        user_id: userId,
+        student_form_id: formRow?.id ?? null,
+        rank: payload.rank,
+        filters: {
+          gender: payload.gender,
+          caste: payload.caste,
+          ews: payload.ews,
+          pwd: payload.pwd,
+          def: payload.def,
+          tfws: payload.tfws,
+          orphan: payload.orphan,
+          mi: payload.mi,
+          home_university: payload.home_university,
+          preferred_districts: payload.preferred_districts,
+          preferred_branches: payload.preferred_branches,
+        },
+        result_count: data?.length ?? 0,
+      });
+    }
+
     return jsonResponse(data ?? []);
   } catch (error) {
     return jsonResponse({ error: error.message }, 500);
